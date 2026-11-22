@@ -33,24 +33,18 @@ public:
 class Selection final {
 private:
     std::unique_ptr<std::weak_ptr<Book>[]> data;
-    size_t size;
-    size_t capacity;
+    std::size_t size;
+    std::size_t capacity;
 
 public:
     Selection();
-    ~Selection();
-
     Selection(const Selection& other);
     Selection& operator=(const Selection& other);
-
-    Selection(Selection&& other) noexcept;
-    Selection& operator=(Selection&& other) noexcept;
-
+    Selection(Selection&& other);
+    Selection& operator=(Selection&& other);
     void add(const std::weak_ptr<Book>& book);
-
     size_t getSize() const;
     bool empty() const;
-
     std::weak_ptr<Book> operator[](size_t index) const;
 };
 
@@ -67,10 +61,15 @@ public:
 class BST final {
 private:
     std::unique_ptr<Node> root;
+    int count = 0;
+    std::unique_ptr<Node> createNode(const Book& book);
+    int height(Node* n) const;
+    void selectDfs(const Criterion& c, const Node* v, Selection& res) const;
 public:
-
-    BST();
-
+    BST(const BST&) = delete;
+    BST& operator=(const BST&) = delete;
+    BST(BST&& other);
+    BST& operator=(BST&& other);
     bool insert(const Book& book);
     std::weak_ptr<Book> find(const Book& key) const;
     bool remove(const Book& key);
@@ -89,5 +88,17 @@ public:
     BookSelector(int lo, int hi, int minPages): l(lo), h(hi), minPagesNum(minPages) {}
     bool matches(const Book& book) const override {
         return book.getYear() >= l && book.getYear() < h &&book.getPages() >= minPagesNum;
+    }
+};
+
+class MinPagesSelector final : public Criterion {
+private:
+    int minPagesNum;
+public:
+    explicit MinPagesSelector(int minPages): minPagesNum(minPages) {
+    }
+
+    bool matches(const Book& book) const override {
+        return book.getPages() >= minPagesNum;
     }
 };
