@@ -66,6 +66,7 @@ private:
     int height(Node* n) const;
     void selectDfs(const Criterion& c, const Node* v, Selection& res) const;
 public:
+    BST() = default;
     BST(const BST&) = delete;
     BST& operator=(const BST&) = delete;
     BST(BST&& other);
@@ -91,14 +92,9 @@ public:
     }
 };
 
-class MinPagesSelector final : public Criterion {
-private:
-    int minPagesNum;
+class AllSelector final : public Criterion {
 public:
-    explicit MinPagesSelector(int minPages): minPagesNum(minPages) {
-    }
-
     bool matches(const Book& book) const override {
-        return book.getPages() >= minPagesNum;
+        return true;
     }
 };
