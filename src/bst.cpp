@@ -244,7 +244,6 @@ Selection& Selection::operator=(const Selection& other) {
 }
 
 Selection::Selection(Selection&& other): data(std::move(other.data)),size(other.size),capacity(other.capacity) {
-
     other.size = 0;
     other.capacity = 0;
 }
